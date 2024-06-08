@@ -1,8 +1,8 @@
 package com.vegadelalyra.question_service.controller;
 
-import com.vegadelalyra.question_service.model.Question;
-import com.vegadelalyra.question_service.model.QuestionWrapper;
-import com.vegadelalyra.question_service.model.Response;
+import com.vegadelalyra.question_service.dao.model.Question;
+import com.vegadelalyra.question_service.dao.model.QuestionWrapperDTO;
+import com.vegadelalyra.question_service.dao.model.ResponseDTO;
 import com.vegadelalyra.question_service.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -46,13 +46,13 @@ public class QuestionController {
     }
 
     @PostMapping("quiz")
-    public ResponseEntity<List<QuestionWrapper>> getQuestionsFromId(@RequestBody List<Integer> questionIds) {
+    public ResponseEntity<List<QuestionWrapperDTO>> getQuestionsFromId(@RequestBody List<Integer> questionIds) {
         System.out.println(environment.getProperty("local.server.port"));
         return questionService.getQuestionsFromId(questionIds);
     }
 
     @PostMapping("score")
-    public ResponseEntity<Integer> getScore(@RequestBody List<Response> responses) {
+    public ResponseEntity<Integer> getScore(@RequestBody List<ResponseDTO> responses) {
         return questionService.getScore(responses);
     }
 }

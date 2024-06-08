@@ -1,9 +1,9 @@
 package com.vegadelalyra.question_service.service;
 
 import com.vegadelalyra.question_service.dao.QuestionDAO;
-import com.vegadelalyra.question_service.model.Question;
-import com.vegadelalyra.question_service.model.QuestionWrapper;
-import com.vegadelalyra.question_service.model.Response;
+import com.vegadelalyra.question_service.dao.model.Question;
+import com.vegadelalyra.question_service.dao.model.QuestionWrapperDTO;
+import com.vegadelalyra.question_service.dao.model.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +40,8 @@ public class QuestionService {
         return new ResponseEntity<>(randomQuestions, HttpStatus.CREATED);
     }
 
-    public ResponseEntity<List<QuestionWrapper>> getQuestionsFromId(List<Integer> questionIds) {
-        List<QuestionWrapper> wrappedQuestions = new ArrayList<>();
+    public ResponseEntity<List<QuestionWrapperDTO>> getQuestionsFromId(List<Integer> questionIds) {
+        List<QuestionWrapperDTO> wrappedQuestions = new ArrayList<>();
 
         for (Integer questionId : questionIds) {
             Optional<Question> possibleQuestion = questionDAO.findById(questionId);
@@ -49,7 +49,7 @@ public class QuestionService {
             if (!possibleQuestion.isPresent()) continue;
 
             Question question = possibleQuestion.get();
-            QuestionWrapper wrappedQuestion = new QuestionWrapper(
+            QuestionWrapperDTO wrappedQuestion = new QuestionWrapperDTO(
                 question.getId(),
                 question.getTitle(),
                 question.getOption1(),
@@ -63,9 +63,9 @@ public class QuestionService {
         return new ResponseEntity<>(wrappedQuestions, HttpStatus.OK);
     }
 
-    public ResponseEntity<Integer> getScore(@RequestBody List<Response> responses) {
+    public ResponseEntity<Integer> getScore(@RequestBody List<ResponseDTO> responses) {
         int score = (int) responses.stream()
-                .filter(response -> questionDAO.checkAnswer(response.getId(), response.getResponse()))
+                .filter(responseDTO -> questionDAO.checkAnswer(responseDTO.getId(), responseDTO.getResponse()))
                 .count();
 
         return new ResponseEntity<>(score, HttpStatus.OK);
